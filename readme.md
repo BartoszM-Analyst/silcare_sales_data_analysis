@@ -1,3 +1,5 @@
+<img width="1536" height="1024" alt="file_00000000c85c71f4b68b1922254375af (1)" src="https://github.com/user-attachments/assets/4a7c2e28-5cdc-4800-96ee-a679b420b427" />
+
 # 📊 Silcare Sales Analytics -- End-to-End Data Warehouse & Business Insights Project
 
 ## 🔎 Executive Summary
