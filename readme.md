@@ -1,204 +1,121 @@
-<img width="1536" height="1024" alt="file_00000000c85c71f4b68b1922254375af (1)" src="https://github.com/user-attachments/assets/4a7c2e28-5cdc-4800-96ee-a679b420b427" />
+# Silcare B2B Sales Analysis — Revenue Intelligence & KPI Dashboard
 
-# 📊 Silcare Sales Analytics -- End-to-End Data Warehouse & Business Insights Project
+> **Cosmetics distributor. 12 months of B2B transactional data. The goal: identify where revenue is actually coming from — and where it's at risk.**
 
-## 🔎 Executive Summary
+![SQL](https://img.shields.io/badge/SQL-T--SQL-blue?style=flat-square&logo=microsoftsqlserver)
+![R](https://img.shields.io/badge/R-ggplot2-276DC3?style=flat-square&logo=r)
+![Excel](https://img.shields.io/badge/Excel-Power_Query-217346?style=flat-square&logo=microsoftexcel)
+![Architecture](https://img.shields.io/badge/Architecture-Star_Schema-orange?style=flat-square)
 
-This project presents a complete **end-to-end sales analytics solution**
-built using a structured, enterprise-style data architecture.
+---
 
-The goal was to transform raw transactional sales data into a
-**decision-ready analytical layer**, enabling management to monitor
-performance, identify growth drivers, and detect revenue concentration
-risks.
+## The Business Problem
 
-The project simulates a real-world BI workflow: Raw CSV → Data Cleaning
-→ Data Warehouse (Star Schema) → KPI Layer → Visualization → Executive
-Presentation
+Silcare's sales data lived in raw transactional files — no structure, no KPIs, no way to answer the questions that actually matter to management:
 
-------------------------------------------------------------------------
+- Which products drive the most revenue, and is that trend growing or shrinking?
+- How concentrated is revenue across customers? (i.e. — are we dangerously dependent on a few accounts?)
+- Which months consistently underperform, and why?
 
-## 🎯 Business Problem
+**Without a structured data model, answering any of these questions meant manual Excel work every time.**
 
-A cosmetics company (Silcare) needs visibility into:
+---
 
--   Overall revenue performance
--   Monthly sales dynamics
--   Product contribution to revenue
--   Revenue concentration among customers
--   Trends of top-performing products over time
+## What I Built
 
-The company lacks: - Structured data model - Defined KPIs - Standardized
-reporting layer - Visual performance insights
+An end-to-end analytics layer: raw CSV files → cleaned, modeled, and query-ready data warehouse → business insights.
 
-------------------------------------------------------------------------
+```
+Raw CSV  →  Staging  →  Star Schema (SQL)  →  KPI Views  →  R Visualizations  →  Executive Report
+```
 
-## 🧠 Solution Overview
+The warehouse uses a **Star Schema** (`fact_sales` + `dim_product`, `dim_customer`, `dim_date`), which means any BI tool can connect directly and queries run fast — even as data grows.
 
-I designed and implemented a layered analytics architecture:
+---
 
-1.  Raw data ingestion
-2.  Data cleaning & transformation
-3.  Dimensional modeling (Star Schema)
-4.  Fact table creation
-5.  KPI & analytical marts
-6.  Visualization layer in R
-7.  Executive-ready PowerPoint summary
+## Key Findings
 
-------------------------------------------------------------------------
+### 💰 Revenue Concentration Risk
+The **top 3 customers account for a disproportionate share of total revenue**.  
+This is a classic B2B risk pattern — if one key account churns, it directly impacts the bottom line.  
+*Recommendation: prioritise retention strategies for tier-1 accounts and actively develop mid-tier clients.*
 
-## 🏗️ Architecture
+### 📈 Seasonal Peaks Are Predictable
+Revenue follows a clear seasonal pattern with strong Q4 performance and a consistent soft patch mid-year.  
+*This can be used to plan inventory, staffing, and promotional spend more accurately.*
 
-### Data Flow
+### 🏆 Product Concentration in Top 5 SKUs
+A small number of SKUs generate the majority of product revenue.  
+Monthly trend analysis shows which of these are growing vs. plateauing — critical input for assortment decisions.
 
-Raw CSV → Staging → Dimensions → Fact Table → KPI Views → Visualizations
+### 📉 Flat Months Aren't Random
+Low-revenue months cluster consistently — suggesting structural causes (order cycle timing, client behaviour) rather than noise.
 
-### Warehouse Design
+---
 
-The SQL layer follows a **classic Star Schema**:
+## Repository Structure
 
--   **Fact table:** `fact_sales`
--   **Dimensions:**
-    -   `dim_product`
-    -   `dim_customer`
-    -   `dim_date`
-
-This structure enables: - Scalable reporting - Flexible aggregations -
-Performance-friendly queries - BI tool integration readiness
-
-------------------------------------------------------------------------
-
-## 📂 Repository Structure
-
+```
 silcare_sales_data_analysis/
 │
 ├── data/
-│ ├── raw/ # original dataset
-│ └── processed/ # cleaned dataset
+│   ├── raw/                  # Source transactional data
+│   └── processed/            # Cleaned, transformation-ready data
 │
 ├── sql/
-│ ├── schema/ # DDL (staging, dimensions, fact)
-│ ├── etl/ # loading logic
-│ ├── marts/ # KPI & reporting views
-│ └── ad_hoc/ # business analysis queries
+│   ├── schema/               # DDL: staging, dimensions, fact table
+│   ├── etl/                  # Load scripts (numbered for execution order)
+│   ├── marts/                # KPI views and reporting aggregates
+│   └── ad_hoc/               # Business queries: top products, top customers, trends
 │
-├── r_visualizations/ # R scripts + generated charts
-│
-├── power_query_excel/ # Excel Power Query transformation example
-│
-├── presentation/ # business-facing PPT summary
-│
-└── docs/ # architecture documentation
-------------------------------------------------------------------------
+├── r_visualizations/         # ggplot2 charts: trends, concentration, top SKUs
+├── power_query_excel/        # Power Query transformation example
+├── presentation/             # Executive-facing PowerPoint summary
+└── docs/                     # Architecture diagrams
+```
 
-## 🗄️ SQL Layer
+---
 
-The SQL implementation is divided into logical layers:
+## Tech Stack
 
-### 1️⃣ Schema (DDL)
+| Layer | Tool |
+|---|---|
+| Data modeling | T-SQL (Star Schema) |
+| ETL logic | T-SQL stored procedures |
+| KPI layer | SQL analytical views |
+| Visualisation | R (ggplot2) |
+| Data prep | Power Query (Excel) |
+| Reporting | PowerPoint executive deck |
 
--   Creation of staging tables
--   Creation of dimension tables
--   Creation of fact table
+---
 
-### 2️⃣ ETL
+## SQL Highlights
 
--   Loading dimension tables
--   Populating fact table with cleaned data
+The analysis layer includes:
+- **Revenue KPIs** — total, MoM growth, rolling averages
+- **Customer ranking** — revenue concentration, Pareto analysis
+- **Product trends** — monthly breakdown by SKU, top-N analysis
+- **Period comparisons** — YoY and QoQ aggregations
 
-### 3️⃣ Marts & KPI Layer
+All scripts are numbered for reproducibility. The warehouse design is BI-tool agnostic — Power BI or Tableau can connect directly to the KPI views.
 
--   Revenue KPIs
--   Monthly sales aggregates
--   Analytical views optimized for reporting
+---
 
-### 4️⃣ Ad-hoc Business Queries
+## Analytical Charts (R / ggplot2)
 
--   Top selling products
--   Top customers by revenue
--   Monthly trends
--   Period-based summaries
+| Chart | Business Question Answered |
+|---|---|
+| Monthly revenue trend | Is the business growing? Are there seasonal patterns? |
+| Revenue by product (monthly) | Which SKUs drive volume each month? |
+| Top 5 product trends | Are best-sellers growing or declining? |
+| Customer revenue concentration | How exposed are we to key account churn? |
 
-Scripts are numbered to reflect execution order, ensuring
-reproducibility.
+---
 
-------------------------------------------------------------------------
+## Skills Demonstrated
 
-## 📈 Visualization Layer (R)
+`Data Warehouse Design` · `Dimensional Modelling` · `ETL Pipelines` · `Analytical SQL` · `KPI Development` · `R / ggplot2` · `Business Storytelling` · `Executive Reporting`
 
-Visualizations were created using **ggplot2**, each script producing one
-analytical chart:
+---
 
--   Monthly sales trend
--   Monthly sales by product
--   Top 5 product trend analysis
--   Revenue concentration insights
-
-Generated charts are stored as `.png` files.
-
-------------------------------------------------------------------------
-
-## 📊 Executive Presentation
-
-The project includes a management-level PowerPoint file:
-
-presentation/sales_performance_analysis.pptx
-
-It translates technical findings into: - Business language - Clear
-visual storytelling - Actionable insights
-
-------------------------------------------------------------------------
-
-## 🛠️ Tools & Technologies
-
--   SQL -- Data modeling, ETL, KPI logic
--   Dimensional Modeling (Star Schema)
--   R (ggplot2) -- Data visualization
--   Power Query (Excel) -- Data transformation example
--   PowerPoint -- Executive reporting
-
-------------------------------------------------------------------------
-
-## 💡 Key Competencies Demonstrated
-
--   Data warehouse design
--   Dimensional modeling
--   ETL pipeline structuring
--   Analytical SQL (aggregations, ranking, time analysis)
--   KPI development
--   Data storytelling
--   Business-oriented thinking
--   Clean repository organization (portfolio-ready)
-
-------------------------------------------------------------------------
-
-## 🚀 Why This Project Matters
-
-This is not just a data analysis notebook.
-
-It demonstrates the ability to:
-
--   Think like a BI developer
--   Structure analytics like in enterprise environments
--   Translate raw data into strategic insights
--   Deliver both technical and business outputs
-
-The project reflects real-world responsibilities of: - Junior Data
-Analyst - BI Developer - Analytics Engineer
-
-------------------------------------------------------------------------
-
-## 👤 Author
-
-Created as part of a professional Data Analytics portfolio to
-demonstrate practical, job-ready skills in:
-
--   SQL
--   Data modeling
--   Business analytics
--   Data visualization
-
-If you are reviewing this repository as a recruiter or hiring manager:
-
-This project shows not only query-writing skills, but the ability to
-design structured analytical solutions from scratch.
+*Analysis by Bartosz Majka · [LinkedIn](https://www.linkedin.com/in/bartosz-majka-a8088a35a/)*
